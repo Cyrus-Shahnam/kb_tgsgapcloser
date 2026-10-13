@@ -1,0 +1,963 @@
+
+Validating module in (/home/ac.shahnam/scratch/kb_tgsgapcloser)
+
+Validating method in (/home/ac.shahnam/scratch/kb_tgsgapcloser/ui/narrative/methods/run_tgsgapcloser)
+
+
+Congrats- this module is valid.
+
+
+Delete old Docker containers
+9a2621650236
+
+Build Docker image
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 2.73kB done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/kbase/sdkpython:3.8.10
+#2 DONE 0.3s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 59B done
+#3 DONE 0.0s
+
+#4 [ 1/12] FROM docker.io/kbase/sdkpython:3.8.10@sha256:09ef3683cdfbe3790a2b85c811b6c473dc29f750b2524068e9ea73026eb2e92c
+#4 resolve docker.io/kbase/sdkpython:3.8.10@sha256:09ef3683cdfbe3790a2b85c811b6c473dc29f750b2524068e9ea73026eb2e92c 0.0s done
+#4 DONE 0.0s
+
+#5 [internal] load build context
+#5 transferring context: 591.02kB 0.0s done
+#5 DONE 0.1s
+
+#6 [ 3/12] COPY env-tgsgapcloser.yml /tmp/env-tgsgapcloser.yml
+#6 CACHED
+
+#7 [ 5/12] RUN export PATH=/opt/conda/envs/tgsgapcloser/bin:/opt/conda3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/sdk/bin  && tgsgapcloser -h | grep 'Version : 1.2.1'  && for t in minimap2 racon bash awk getopt; do         command -v "$t" >/dev/null || { echo "MISSING helper: $t"; exit 1; }; done  && { getopt -T >/dev/null; test $? -eq 4 || { echo "getopt is not util-linux getopt"; exit 1; }; }  && for b in tgsgapcandidate tgsgapcloser tgsseqgen tgsseqsplit; do         test -x /opt/conda/envs/tgsgapcloser/bin/tgsgapcloserbin/$b         || { echo "MISSING binary: tgsgapcloserbin/$b"; exit 1; }; done  && minimap2 --version && racon --version  && echo TGS_ENV_OK
+#7 CACHED
+
+#8 [ 4/12] RUN micromamba create -y -p /opt/conda/envs/tgsgapcloser -f /tmp/env-tgsgapcloser.yml  && micromamba clean -a -y  && test -x /opt/conda/envs/tgsgapcloser/bin/tgsgapcloser  || { echo "ENV EMPTY OR INCOMPLETE - env-tgsgapcloser.yml as received:"; cat -A /tmp/env-tgsgapcloser.yml; exit 1; }
+#8 CACHED
+
+#9 [ 6/12] RUN pip install --no-cache-dir jsonrpcbase pytest pytest-cov coverage
+#9 CACHED
+
+#10 [ 2/12] RUN ( curl -fsSL https://micro.mamba.pm/api/micromamba/linux-64/latest         | tar -xvj -C /usr/local bin/micromamba )     || ( curl -fsSL https://github.com/mamba-org/micromamba-releases/releases/latest/download/micromamba-linux-64.tar.bz2         | tar -xvj -C /usr/local bin/micromamba )
+#10 CACHED
+
+#11 [ 7/12] RUN python -c "import sys; print(sys.executable)"  && python -c "import pytest, jsonrpcbase; print('server python OK')"
+#11 CACHED
+
+#12 [ 8/12] COPY ./ /kb/module
+#12 DONE 0.1s
+
+#13 [ 9/12] RUN mkdir -p /kb/module/work
+#13 DONE 0.3s
+
+#14 [10/12] RUN chmod -R a+rw /kb/module
+#14 DONE 0.4s
+
+#15 [11/12] WORKDIR /kb/module
+#15 DONE 0.0s
+
+#16 [12/12] RUN make all
+#16 0.321 kb-sdk compile kb_tgsgapcloser.spec \
+#16 0.321 	--out lib \
+#16 0.321 	--pysrvname kb_tgsgapcloser.kb_tgsgapcloserServer \
+#16 0.321 	--pyimplname kb_tgsgapcloser.kb_tgsgapcloserImpl;
+#16 0.494 KBase SDK version 1.2.0 (commit 8def489f648a7ff5657d33ed05f41c60f4766e1b)
+#16 0.699 chmod +x scripts/entrypoint.sh
+#16 0.705 mkdir -p bin
+#16 0.709 echo '#!/bin/bash' > scripts/start_server.sh
+#16 0.711 echo 'script_dir=$(dirname "$(readlink -f "$0")")' >> scripts/start_server.sh
+#16 0.714 echo 'export KB_DEPLOYMENT_CONFIG=$script_dir/../deploy.cfg' >> scripts/start_server.sh
+#16 0.716 echo 'export PYTHONPATH=$script_dir/../lib:$PATH:$PYTHONPATH' >> scripts/start_server.sh
+#16 0.718 echo 'uwsgi --master --processes 5 --threads 5 --http :5000 --wsgi-file $script_dir/../lib/kb_tgsgapcloser/kb_tgsgapcloserServer.py' >> scripts/start_server.sh
+#16 0.720 chmod +x scripts/start_server.sh
+#16 0.722 mkdir -p bin
+#16 0.725 echo '#!/bin/bash' > bin/run_kb_tgsgapcloser_async_job.sh
+#16 0.728 echo 'script_dir=$(dirname "$(readlink -f "$0")")' >> bin/run_kb_tgsgapcloser_async_job.sh
+#16 0.730 echo 'export PYTHONPATH=$script_dir/../lib:$PATH:$PYTHONPATH' >> bin/run_kb_tgsgapcloser_async_job.sh
+#16 0.732 echo 'python -u $script_dir/../lib/kb_tgsgapcloser/kb_tgsgapcloserServer.py $1 $2 $3' >> bin/run_kb_tgsgapcloser_async_job.sh
+#16 0.734 chmod +x bin/run_kb_tgsgapcloser_async_job.sh
+#16 0.736 echo '#!/bin/bash' > test/run_tests.sh
+#16 0.738 echo 'script_dir=$(dirname "$(readlink -f "$0")")' >> test/run_tests.sh
+#16 0.740 echo 'export KB_DEPLOYMENT_CONFIG=$script_dir/../deploy.cfg' >> test/run_tests.sh
+#16 0.743 echo 'export KB_AUTH_TOKEN=`cat /kb/module/work/token`' >> test/run_tests.sh
+#16 0.745 echo 'echo "Removing temp files..."' >> test/run_tests.sh
+#16 0.747 echo 'rm -rf /kb/module/work/tmp/*' >> test/run_tests.sh
+#16 0.749 echo 'echo "...done removing temp files."' >> test/run_tests.sh
+#16 0.751 echo 'export PYTHONPATH=$script_dir/../lib:$PATH:$PYTHONPATH' >> test/run_tests.sh
+#16 0.753 echo 'cd $script_dir/../test' >> test/run_tests.sh
+#16 0.756 echo 'python -m nose --with-coverage --cover-package=kb_tgsgapcloser --cover-html --cover-html-dir=/kb/module/work/test_coverage --nocapture  --nologcapture .' >> test/run_tests.sh
+#16 0.757 chmod +x test/run_tests.sh
+#16 DONE 0.8s
+
+#17 exporting to image
+#17 exporting layers 0.1s done
+#17 writing image sha256:07e30dd112521595da02427cd861bb830fe70a87b68e15c4dd6184849c506963 done
+#17 naming to docker.io/test/kb_tgsgapcloser:latest done
+#17 DONE 0.1s
+Delete old Docker image
+Deleted: sha256:ad501686c7f9321a17b0b1280e0ed507123b3bb6b4515d8b08f6bd47d8cb74f5
+
+Run Tests
+if [ ! -f /kb/module/work/token ]; then echo -e '\nOutside a docker container please run "kb-sdk test" rather than "make test"\n' && exit 1; fi
+bash test/run_tests.sh
+Removing temp files...
+...done removing temp files.
+1791905042.34 - CallbackServer: Subjob method: AssemblyUtil.save_assembly_from_fasta JobID: 5d06b7f4-8ad3-452e-a496-a10570d1d031
+1791905043.18 - CallbackServer: Running module AssemblyUtil:
+url: https://github.com/kbaseapps/AssemblyUtil
+commit: 59855bcb24014c3030e146b98c8d3e70abac1fa1
+version: 3.0.0
+release: release
+
+save_assembly_from_fasta -- paramaters = 
+validating parameters
+Translating workspace name test_kb_tgsgapcloser_1791905038971 to a workspace ID. Prefer submitting a workspace ID over a mutable workspace name that may cause race conditions
+1791905044.42 - CallbackServer: Subjob method: DataFileUtil.ws_name_to_id JobID: b697083d-ec53-466e-9622-9f10f955a20e
+1791905044.91 - CallbackServer: Running module DataFileUtil:
+url: https://github.com/kbaseapps/DataFileUtil
+commit: 0d855560a37f8787ab3bb67e464b9c94b299764e
+version: 0.2.1
+release: release
+
+1791905045.7443736: Shock url: https://appdev.kbase.us/services/shock-api
+1791905047.06 - CallbackServer: Subjob method: DataFileUtil.unpack_files JobID: 4a4c46cf-0510-409a-bfc5-5d3ec02af870
+1791905047.06 - CallbackServer: WARNING: Module DataFileUtil was already used once for this job. Using cached version:
+url: https://github.com/kbaseapps/DataFileUtil
+commit: 0d855560a37f8787ab3bb67e464b9c94b299764e
+version: 0.2.1
+release: release
+
+1791905048.0954845: Shock url: https://appdev.kbase.us/services/shock-api
+parsing FASTA file: /kb/module/work/tmp/import_fasta_50f84fd1-c286-4961-9ae1-ba36cbf5d788/draft.fa
+ - parsed 4 contigs, 200000 bp
+saving assemblies to KBase
+Uploading FASTA files to the Blobstore
+1791905048.72 - CallbackServer: Subjob method: DataFileUtil.file_to_shock_mass JobID: b7274351-34b9-484b-bd40-b840fc2b4104
+1791905048.72 - CallbackServer: WARNING: Module DataFileUtil was already used once for this job. Using cached version:
+url: https://github.com/kbaseapps/DataFileUtil
+commit: 0d855560a37f8787ab3bb67e464b9c94b299764e
+version: 0.2.1
+release: release
+
+1791905050.0684848: Shock url: https://appdev.kbase.us/services/shock-api
+1791905050.4954674: uploading file /kb/module/work/tmp/import_fasta_50f84fd1-c286-4961-9ae1-ba36cbf5d788/draft.fa into shock node
+1791905051.7718785: uploading done into shock node: 7f3bb01f-61a1-4d5d-8b74-df73ceeed377
+Saving Assemblies to Workspace
+1791905052.29 - CallbackServer: Subjob method: DataFileUtil.save_objects JobID: 6dabf217-8864-46a8-beeb-302d6511af4e
+1791905052.29 - CallbackServer: WARNING: Module DataFileUtil was already used once for this job. Using cached version:
+url: https://github.com/kbaseapps/DataFileUtil
+commit: 0d855560a37f8787ab3bb67e464b9c94b299764e
+version: 0.2.1
+release: release
+
+1791905053.355524: Shock url: https://appdev.kbase.us/services/shock-api
+1791905060.41 - CallbackServer: Subjob method: AssemblyUtil.save_assembly_from_fasta JobID: 0e5f60d0-c823-428a-9049-2485589b801f
+1791905060.41 - CallbackServer: WARNING: Module AssemblyUtil was already used once for this job. Using cached version:
+url: https://github.com/kbaseapps/AssemblyUtil
+commit: 59855bcb24014c3030e146b98c8d3e70abac1fa1
+version: 3.0.0
+release: release
+
+save_assembly_from_fasta -- paramaters = 
+validating parameters
+Translating workspace name test_kb_tgsgapcloser_1791905038971 to a workspace ID. Prefer submitting a workspace ID over a mutable workspace name that may cause race conditions
+1791905061.69 - CallbackServer: Subjob method: DataFileUtil.ws_name_to_id JobID: 5e4c598e-361d-4740-a5c3-669c60017332
+1791905061.70 - CallbackServer: WARNING: Module DataFileUtil was already used once for this job. Using cached version:
+url: https://github.com/kbaseapps/DataFileUtil
+commit: 0d855560a37f8787ab3bb67e464b9c94b299764e
+version: 0.2.1
+release: release
+
+1791905062.7460105: Shock url: https://appdev.kbase.us/services/shock-api
+1791905064.10 - CallbackServer: Subjob method: DataFileUtil.unpack_files JobID: 6eb58d62-4230-47be-8c81-3f057cb7ef2f
+1791905064.10 - CallbackServer: WARNING: Module DataFileUtil was already used once for this job. Using cached version:
+url: https://github.com/kbaseapps/DataFileUtil
+commit: 0d855560a37f8787ab3bb67e464b9c94b299764e
+version: 0.2.1
+release: release
+
+1791905065.1128623: Shock url: https://appdev.kbase.us/services/shock-api
+parsing FASTA file: /kb/module/work/tmp/import_fasta_90c29c7e-9cde-48f9-ad78-c6bda173a326/truth.fa
+ - parsed 4 contigs, 200000 bp
+saving assemblies to KBase
+Uploading FASTA files to the Blobstore
+1791905065.75 - CallbackServer: Subjob method: DataFileUtil.file_to_shock_mass JobID: 93d01163-51d3-4048-8b70-0d5765823043
+1791905065.75 - CallbackServer: WARNING: Module DataFileUtil was already used once for this job. Using cached version:
+url: https://github.com/kbaseapps/DataFileUtil
+commit: 0d855560a37f8787ab3bb67e464b9c94b299764e
+version: 0.2.1
+release: release
+
+1791905066.7910562: Shock url: https://appdev.kbase.us/services/shock-api
+1791905067.0394545: uploading file /kb/module/work/tmp/import_fasta_90c29c7e-9cde-48f9-ad78-c6bda173a326/truth.fa into shock node
+1791905068.1310065: uploading done into shock node: 8ddb0c18-63fe-4465-a3c8-e49ef304556a
+Saving Assemblies to Workspace
+1791905069.31 - CallbackServer: Subjob method: DataFileUtil.save_objects JobID: 3d1fed10-08a8-4f3f-939d-e0dbba6140dc
+1791905069.31 - CallbackServer: WARNING: Module DataFileUtil was already used once for this job. Using cached version:
+url: https://github.com/kbaseapps/DataFileUtil
+commit: 0d855560a37f8787ab3bb67e464b9c94b299764e
+version: 0.2.1
+release: release
+
+1791905070.2960548: Shock url: https://appdev.kbase.us/services/shock-api
+1791905072.08 - CallbackServer: Subjob method: ReadsUtils.upload_reads JobID: 11c48e3e-2945-4543-89d1-533c9c56c9bb
+1791905072.37 - CallbackServer: Running module ReadsUtils:
+url: https://github.com/kbaseapps/ReadsUtils
+commit: 04ed67ed6d5c72020009016220adb2db32e74ae8
+version: 1.0.1
+release: release
+
+1791905073.258018: Starting upload reads, parsing args
+1791905073.2582269: Translating workspace name to id
+1791905073.26 - CallbackServer: Subjob method: DataFileUtil.ws_name_to_id JobID: 470de475-3657-46d5-96ee-dcd119bba53a
+1791905073.26 - CallbackServer: WARNING: Module DataFileUtil was already used once for this job. Using cached version:
+url: https://github.com/kbaseapps/DataFileUtil
+commit: 0d855560a37f8787ab3bb67e464b9c94b299764e
+version: 0.2.1
+release: release
+
+1791905074.311547: Shock url: https://appdev.kbase.us/services/shock-api
+1791905075.6590514: translation done
+1791905075.6602798: Validating FASTQ file /kb/module/work/tmp/fixture_1791905039861/reads.fastq
+1791905075.6603212: Checking line count
+1791905075.6603389: Removing blank lines and CRLF characters if any
+1791905075.7800133: 2500 lines in file
+Finished processing /kb/module/work/tmp/fixture_1791905039861/reads.fastq with 2500 lines containing 625 sequences.
+There were a total of 0 errors.
+Returning: 0 : FASTQ_SUCCESS
+1791905075.902158: Validation return code: 0
+1791905075.9022548: Validation succeeded
+1791905075.9024782: validation complete, uploading files to shock
+1791905075.91 - CallbackServer: Subjob method: DataFileUtil.file_to_shock JobID: 3413eb95-9989-47d8-bad4-e79c9575bf75
+1791905075.91 - CallbackServer: WARNING: Module DataFileUtil was already used once for this job. Using cached version:
+url: https://github.com/kbaseapps/DataFileUtil
+commit: 0d855560a37f8787ab3bb67e464b9c94b299764e
+version: 0.2.1
+release: release
+
+1791905076.9687808: Shock url: https://appdev.kbase.us/services/shock-api
+1791905077.2267535: gzipping (with pigz) /kb/module/work/tmp/fixture_1791905039861/reads.fastq to /kb/module/work/tmp/fixture_1791905039861/reads.fastq.gz
+1791905077.3803895: uploading file /kb/module/work/tmp/fixture_1791905039861/reads.fastq.gz into shock node
+1791905078.2567482: uploading done into shock node: c6d48df4-7546-4d4b-8b88-b40c0290f4de
+1791905079.44 - CallbackServer: Subjob method: kb_ea_utils.calculate_fastq_stats JobID: 83b5a522-05ec-44e3-b0ff-a444a4071395
+1791905079.71 - CallbackServer: Running module kb_ea_utils:
+url: https://github.com/kbaseapps/kb_ea_utils
+commit: b09edaab7d1102890e8ff1dde33f142de38a64e6
+version: 2.0.2
+release: release
+
+return code: 0
+
+ea_report
+====/kb/module/work/tmp/fixture_1791905039861/reads.fastq====
+reads	625
+len	30575
+len mean	8792.5264
+len stdev	4192.1317
+len min	1497
+phred	33
+window-size	625
+cycle-max	35
+qual min	20
+qual max	20
+qual mean	20.0000
+qual stdev	0.0000
+%A	24.2286
+%C	24.8503
+%G	25.2754
+%T	25.6457
+%N	0.0000
+total bases	5495329
+
+ea_stats
+{'read_count': 625, 'phred_type': u'33', 'read_length_stdev': 4192.1316999999999, 'total_bases': 5495329, 'qual_min': 20.0, 'qual_max': 20.0, 'qual_mean': 20.0, 'number_of_duplicates': 0, 'read_length_mean': 8792.5264000000006, 'qual_stdev': 0.0, 'gc_content': 0.50125700000000006, 'base_percentages': {u'A': 24.2286, u'C': 24.850300000000001, u'T': 25.645700000000001, u'G': 25.275400000000001, u'N': 0.0}}
+1791905081.8293076: saving workspace object
+1791905081.83 - CallbackServer: Subjob method: DataFileUtil.save_objects JobID: d69caa0f-98f1-4c19-9f20-50ba9d46d0ad
+1791905081.83 - CallbackServer: WARNING: Module DataFileUtil was already used once for this job. Using cached version:
+url: https://github.com/kbaseapps/DataFileUtil
+commit: 0d855560a37f8787ab3bb67e464b9c94b299764e
+version: 0.2.1
+release: release
+
+1791905082.9221318: Shock url: https://appdev.kbase.us/services/shock-api
+1791905084.235559: save complete
+1791905089.75 - CallbackServer: Subjob method: AssemblyUtil.get_assembly_as_fasta JobID: 186247cc-d9cb-49ec-b0e3-ab50ddeb1fc7
+1791905089.75 - CallbackServer: WARNING: Module AssemblyUtil was already used once for this job. Using cached version:
+url: https://github.com/kbaseapps/AssemblyUtil
+commit: 59855bcb24014c3030e146b98c8d3e70abac1fa1
+version: 3.0.0
+release: release
+
+downloading ws object data (77656/1/1)
+1791905091.15 - CallbackServer: Subjob method: DataFileUtil.get_objects JobID: a84b7f27-0759-45d6-99f9-bdb7d63eedd8
+1791905091.15 - CallbackServer: WARNING: Module DataFileUtil was already used once for this job. Using cached version:
+url: https://github.com/kbaseapps/DataFileUtil
+commit: 0d855560a37f8787ab3bb67e464b9c94b299764e
+version: 0.2.1
+release: release
+
+1791905092.1400318: Shock url: https://appdev.kbase.us/services/shock-api
+1791905093.51 - CallbackServer: Subjob method: DataFileUtil.shock_to_file JobID: 7bb981d1-ea1e-400b-8a4e-8ea7e8f56bd4
+1791905093.51 - CallbackServer: WARNING: Module DataFileUtil was already used once for this job. Using cached version:
+url: https://github.com/kbaseapps/DataFileUtil
+commit: 0d855560a37f8787ab3bb67e464b9c94b299764e
+version: 0.2.1
+release: release
+
+1791905094.5347598: Shock url: https://appdev.kbase.us/services/shock-api
+1791905094.7769122: Fetching info for handle: KBH_252839
+1791905094.9912086: downloading shock node 7f3bb01f-61a1-4d5d-8b74-df73ceeed377 into file: /kb/module/work/tmp/kt_draft.fa
+1791905095.4532213: downloading done
+1791905097.80 - CallbackServer: Subjob method: ReadsUtils.download_reads JobID: e32978ae-6d82-469d-98d0-043131ba2b08
+1791905097.80 - CallbackServer: WARNING: Module ReadsUtils was already used once for this job. Using cached version:
+url: https://github.com/kbaseapps/ReadsUtils
+commit: 04ed67ed6d5c72020009016220adb2db32e74ae8
+version: 1.0.1
+release: release
+
+1791905099.0523677: Running download_reads with params:
+{'read_libraries': ['77656/3/1']}
+1791905099.05 - CallbackServer: Subjob method: DataFileUtil.get_objects JobID: 1f8f0ec5-1a63-4cde-bb82-3c1e177f3471
+1791905099.06 - CallbackServer: WARNING: Module DataFileUtil was already used once for this job. Using cached version:
+url: https://github.com/kbaseapps/DataFileUtil
+commit: 0d855560a37f8787ab3bb67e464b9c94b299764e
+version: 0.2.1
+release: release
+
+1791905100.0603113: Shock url: https://appdev.kbase.us/services/shock-api
+
+1791905101.4157758: === processing read library 77656/3/1===
+
+1791905101.4158652: Type: KBaseFile.SingleEndLibrary-2.1
+1791905101.42 - CallbackServer: Subjob method: DataFileUtil.shock_to_file JobID: 23a984db-d2c6-465f-8589-0756622e8cb2
+1791905101.42 - CallbackServer: WARNING: Module DataFileUtil was already used once for this job. Using cached version:
+url: https://github.com/kbaseapps/DataFileUtil
+commit: 0d855560a37f8787ab3bb67e464b9c94b299764e
+version: 0.2.1
+release: release
+
+1791905102.5087957: Shock url: https://appdev.kbase.us/services/shock-api
+1791905102.8698173: downloading shock node c6d48df4-7546-4d4b-8b88-b40c0290f4de into file: /kb/module/work/tmp/c6d48df4-7546-4d4b-8b88-b40c0290f4de
+1791905103.4922864: decompressing (with pigz) /kb/module/work/tmp/c6d48df4-7546-4d4b-8b88-b40c0290f4de to /kb/module/work/tmp/c6d48df4-7546-4d4b-8b88-b40c0290f4de ...
+1791905103.6201136: downloading done
+1791905103.8237312: Filename from Shock: reads.fastq.gz
+1791905103.8237884: Moving /kb/module/work/tmp/c6d48df4-7546-4d4b-8b88-b40c0290f4de to /kb/module/work/tmp/c6d48df4-7546-4d4b-8b88-b40c0290f4de.single.fastq
+1791905108.12 - CallbackServer: Subjob method: AssemblyUtil.save_assembly_from_fasta JobID: 63c4cca2-3675-4df0-a3e5-72b2a363a019
+1791905108.12 - CallbackServer: WARNING: Module AssemblyUtil was already used once for this job. Using cached version:
+url: https://github.com/kbaseapps/AssemblyUtil
+commit: 59855bcb24014c3030e146b98c8d3e70abac1fa1
+version: 3.0.0
+release: release
+
+save_assembly_from_fasta -- paramaters = 
+validating parameters
+Translating workspace name test_kb_tgsgapcloser_1791905038971 to a workspace ID. Prefer submitting a workspace ID over a mutable workspace name that may cause race conditions
+1791905109.46 - CallbackServer: Subjob method: DataFileUtil.ws_name_to_id JobID: 81147103-a180-4b28-99f3-4b1a03c3e64c
+1791905109.46 - CallbackServer: WARNING: Module DataFileUtil was already used once for this job. Using cached version:
+url: https://github.com/kbaseapps/DataFileUtil
+commit: 0d855560a37f8787ab3bb67e464b9c94b299764e
+version: 0.2.1
+release: release
+
+1791905110.4986815: Shock url: https://appdev.kbase.us/services/shock-api
+1791905111.86 - CallbackServer: Subjob method: DataFileUtil.unpack_files JobID: acc9173a-838b-4c5b-971b-d83855f4a8d7
+1791905111.86 - CallbackServer: WARNING: Module DataFileUtil was already used once for this job. Using cached version:
+url: https://github.com/kbaseapps/DataFileUtil
+commit: 0d855560a37f8787ab3bb67e464b9c94b299764e
+version: 0.2.1
+release: release
+
+1791905112.912412: Shock url: https://appdev.kbase.us/services/shock-api
+parsing FASTA file: /kb/module/work/tmp/import_fasta_d46d2881-d70f-4dde-b64a-cf7ad0cc7afa/kt_racon.fa
+ - parsed 4 contigs, 199999 bp
+saving assemblies to KBase
+Uploading FASTA files to the Blobstore
+1791905113.53 - CallbackServer: Subjob method: DataFileUtil.file_to_shock_mass JobID: 19eeb14b-97b7-440b-8aee-776462e21ab3
+1791905113.53 - CallbackServer: WARNING: Module DataFileUtil was already used once for this job. Using cached version:
+url: https://github.com/kbaseapps/DataFileUtil
+commit: 0d855560a37f8787ab3bb67e464b9c94b299764e
+version: 0.2.1
+release: release
+
+1791905114.5781617: Shock url: https://appdev.kbase.us/services/shock-api
+1791905114.846456: uploading file /kb/module/work/tmp/import_fasta_d46d2881-d70f-4dde-b64a-cf7ad0cc7afa/kt_racon.fa into shock node
+1791905115.398023: uploading done into shock node: aa448fae-0521-42ac-ade9-bddd354d1a26
+Saving Assemblies to Workspace
+1791905115.90 - CallbackServer: Subjob method: DataFileUtil.save_objects JobID: de7673fd-0866-4ec0-8eb4-f87692e984f4
+1791905115.90 - CallbackServer: WARNING: Module DataFileUtil was already used once for this job. Using cached version:
+url: https://github.com/kbaseapps/DataFileUtil
+commit: 0d855560a37f8787ab3bb67e464b9c94b299764e
+version: 0.2.1
+release: release
+
+1791905116.9061558: Shock url: https://appdev.kbase.us/services/shock-api
+1791905120.06 - CallbackServer: Subjob method: KBaseReport.create_extended_report JobID: e8d56588-cebb-4829-b6b5-04821cb4250b
+1791905120.31 - CallbackServer: Running module KBaseReport:
+url: https://github.com/kbaseapps/KBaseReport
+commit: b8bb470a4c88d65230e525db48d6a3730069185d
+version: 3.2.1
+release: release
+
+1791905121.41 - CallbackServer: Subjob method: DataFileUtil.file_to_shock JobID: c5c19162-0455-4d99-86b3-de3ceb6af8ec
+1791905121.41 - CallbackServer: WARNING: Module DataFileUtil was already used once for this job. Using cached version:
+url: https://github.com/kbaseapps/DataFileUtil
+commit: 0d855560a37f8787ab3bb67e464b9c94b299764e
+version: 0.2.1
+release: release
+
+1791905122.4330792: Shock url: https://appdev.kbase.us/services/shock-api
+1791905122.7279239: uploading file /kb/module/work/tmp/kb_tgsgapcloser_71c100df3b34/report/gapfill_summary.tsv into shock node
+1791905123.5166285: uploading done into shock node: d48949c9-8782-4147-8e69-5d8f3b07c481
+1791905123.81 - CallbackServer: Subjob method: DataFileUtil.file_to_shock JobID: 7eead2d7-7aaf-4b06-aece-fc6a8f3cf34a
+1791905123.81 - CallbackServer: WARNING: Module DataFileUtil was already used once for this job. Using cached version:
+url: https://github.com/kbaseapps/DataFileUtil
+commit: 0d855560a37f8787ab3bb67e464b9c94b299764e
+version: 0.2.1
+release: release
+
+1791905124.98639: Shock url: https://appdev.kbase.us/services/shock-api
+1791905125.2563024: uploading file /kb/module/work/tmp/kb_tgsgapcloser_71c100df3b34/report/gapfill_per_gap.tsv into shock node
+1791905125.650642: uploading done into shock node: 0e3dcd4a-048b-4b7d-82a2-45f2b719e6b4
+1791905126.25 - CallbackServer: Subjob method: DataFileUtil.file_to_shock JobID: 1b63dba1-d626-4b98-9fea-5520cba8a62c
+1791905126.25 - CallbackServer: WARNING: Module DataFileUtil was already used once for this job. Using cached version:
+url: https://github.com/kbaseapps/DataFileUtil
+commit: 0d855560a37f8787ab3bb67e464b9c94b299764e
+version: 0.2.1
+release: release
+
+1791905127.2842686: Shock url: https://appdev.kbase.us/services/shock-api
+1791905127.569308: uploading file /kb/module/work/tmp/kb_tgsgapcloser_71c100df3b34/report/tgsgapcloser_output.zip into shock node
+1791905128.0118566: uploading done into shock node: c1b492d2-b261-4def-a006-fdd108b726ad
+1791905128.64 - CallbackServer: Subjob method: DataFileUtil.file_to_shock JobID: 588cf3e7-c1eb-454c-b402-d37c0c35b8b3
+1791905128.64 - CallbackServer: WARNING: Module DataFileUtil was already used once for this job. Using cached version:
+url: https://github.com/kbaseapps/DataFileUtil
+commit: 0d855560a37f8787ab3bb67e464b9c94b299764e
+version: 0.2.1
+release: release
+
+1791905129.66846: Shock url: https://appdev.kbase.us/services/shock-api
+1791905129.9635644: Packing /kb/module/work/tmp/kb_tgsgapcloser_71c100df3b34/report/html to zip
+1791905129.9832387: uploading file /kb/module/work/tmp/kb_tgsgapcloser_71c100df3b34/report/html/html.zip into shock node
+1791905130.4078848: uploading done into shock node: 380bf7b5-1bdf-446e-a8c0-294214ba9b62
+1791905131.02 - CallbackServer: Subjob method: DataFileUtil.ws_name_to_id JobID: 685214ef-137b-4582-a976-d8928482bbd4
+1791905131.02 - CallbackServer: WARNING: Module DataFileUtil was already used once for this job. Using cached version:
+url: https://github.com/kbaseapps/DataFileUtil
+commit: 0d855560a37f8787ab3bb67e464b9c94b299764e
+version: 0.2.1
+release: release
+
+1791905132.0751464: Shock url: https://appdev.kbase.us/services/shock-api
+1791905133.43 - CallbackServer: Subjob method: DataFileUtil.save_objects JobID: 328b1d8d-ebbe-458f-9965-a13c9b03fa68
+1791905133.43 - CallbackServer: WARNING: Module DataFileUtil was already used once for this job. Using cached version:
+url: https://github.com/kbaseapps/DataFileUtil
+commit: 0d855560a37f8787ab3bb67e464b9c94b299764e
+version: 0.2.1
+release: release
+
+1791905134.49043: Shock url: https://appdev.kbase.us/services/shock-api
+..........1791905137.5035439 INFO: kb_tgsgapcloser summary: {"gaps_before": 12, "gaps_after": 0, "gaps_closed": 12, "filled": 12, "merged": 0, "partial": 0, "unfilled": 0, "closure_rate": 1.0, "gap_bp_before": 11100, "gap_bp_after": 0, "filled_bp": 11099, "scaftig_n50_before": 12713, "scaftig_n50_after": 60000, "read_coverage": 29.1, "tool_version": "1.2.1", "runtime_s": 2.3}
+1791905137.51 - CallbackServer: Subjob method: AssemblyUtil.get_assembly_as_fasta JobID: b0744310-d237-42f4-aed2-fb4cfd83c1ed
+1791905137.51 - CallbackServer: WARNING: Module AssemblyUtil was already used once for this job. Using cached version:
+url: https://github.com/kbaseapps/AssemblyUtil
+commit: 59855bcb24014c3030e146b98c8d3e70abac1fa1
+version: 3.0.0
+release: release
+
+downloading ws object data (77656/4/1)
+1791905138.98 - CallbackServer: Subjob method: DataFileUtil.get_objects JobID: 2256eb5b-9b2f-42f5-9d57-60dbf6b5f47d
+1791905138.98 - CallbackServer: WARNING: Module DataFileUtil was already used once for this job. Using cached version:
+url: https://github.com/kbaseapps/DataFileUtil
+commit: 0d855560a37f8787ab3bb67e464b9c94b299764e
+version: 0.2.1
+release: release
+
+1791905140.0545063: Shock url: https://appdev.kbase.us/services/shock-api
+1791905141.36 - CallbackServer: Subjob method: DataFileUtil.shock_to_file JobID: 20a33a20-4b39-4a81-8663-442b3f3ea7d6
+1791905141.36 - CallbackServer: WARNING: Module DataFileUtil was already used once for this job. Using cached version:
+url: https://github.com/kbaseapps/DataFileUtil
+commit: 0d855560a37f8787ab3bb67e464b9c94b299764e
+version: 0.2.1
+release: release
+
+1791905142.3950675: Shock url: https://appdev.kbase.us/services/shock-api
+1791905142.65944: Fetching info for handle: KBH_252842
+1791905142.924906: downloading shock node aa448fae-0521-42ac-ade9-bddd354d1a26 into file: /kb/module/work/tmp/kt_racon.fa
+1791905143.2557204: downloading done
+1791905145.70 - CallbackServer: Subjob method: AssemblyUtil.get_assembly_as_fasta JobID: b1c7e870-dbf4-45e7-890b-9db44b59a752
+1791905145.70 - CallbackServer: WARNING: Module AssemblyUtil was already used once for this job. Using cached version:
+url: https://github.com/kbaseapps/AssemblyUtil
+commit: 59855bcb24014c3030e146b98c8d3e70abac1fa1
+version: 3.0.0
+release: release
+
+downloading ws object data (77656/1/1)
+1791905146.99 - CallbackServer: Subjob method: DataFileUtil.get_objects JobID: 030f07a7-7550-45f3-8279-c6712d596923
+1791905146.99 - CallbackServer: WARNING: Module DataFileUtil was already used once for this job. Using cached version:
+url: https://github.com/kbaseapps/DataFileUtil
+commit: 0d855560a37f8787ab3bb67e464b9c94b299764e
+version: 0.2.1
+release: release
+
+1791905148.0224898: Shock url: https://appdev.kbase.us/services/shock-api
+1791905149.36 - CallbackServer: Subjob method: DataFileUtil.shock_to_file JobID: 8f82b560-c300-4c99-b921-195a3618899c
+1791905149.36 - CallbackServer: WARNING: Module DataFileUtil was already used once for this job. Using cached version:
+url: https://github.com/kbaseapps/DataFileUtil
+commit: 0d855560a37f8787ab3bb67e464b9c94b299764e
+version: 0.2.1
+release: release
+
+1791905150.3683927: Shock url: https://appdev.kbase.us/services/shock-api
+1791905150.634429: Fetching info for handle: KBH_252839
+1791905150.883735: downloading shock node 7f3bb01f-61a1-4d5d-8b74-df73ceeed377 into file: /kb/module/work/tmp/kt_draft.fa
+1791905151.313831: downloading done
+1791905153.76 - CallbackServer: Subjob method: ReadsUtils.download_reads JobID: f8c63320-700c-4b16-9732-d3f2a280f5e6
+1791905153.76 - CallbackServer: WARNING: Module ReadsUtils was already used once for this job. Using cached version:
+url: https://github.com/kbaseapps/ReadsUtils
+commit: 04ed67ed6d5c72020009016220adb2db32e74ae8
+version: 1.0.1
+release: release
+
+1791905154.9388924: Running download_reads with params:
+{'read_libraries': ['77656/3/1']}
+1791905154.94 - CallbackServer: Subjob method: DataFileUtil.get_objects JobID: 79770eac-06d8-4668-bc1f-a6c9bbdff1ec
+1791905154.94 - CallbackServer: WARNING: Module DataFileUtil was already used once for this job. Using cached version:
+url: https://github.com/kbaseapps/DataFileUtil
+commit: 0d855560a37f8787ab3bb67e464b9c94b299764e
+version: 0.2.1
+release: release
+
+1791905156.0634956: Shock url: https://appdev.kbase.us/services/shock-api
+
+1791905157.3242898: === processing read library 77656/3/1===
+
+1791905157.3243759: Type: KBaseFile.SingleEndLibrary-2.1
+1791905157.33 - CallbackServer: Subjob method: DataFileUtil.shock_to_file JobID: 806099ea-e952-4e47-9cd4-6e72187f186b
+1791905157.33 - CallbackServer: WARNING: Module DataFileUtil was already used once for this job. Using cached version:
+url: https://github.com/kbaseapps/DataFileUtil
+commit: 0d855560a37f8787ab3bb67e464b9c94b299764e
+version: 0.2.1
+release: release
+
+1791905158.3150415: Shock url: https://appdev.kbase.us/services/shock-api
+1791905158.7049196: downloading shock node c6d48df4-7546-4d4b-8b88-b40c0290f4de into file: /kb/module/work/tmp/c6d48df4-7546-4d4b-8b88-b40c0290f4de
+1791905159.1902025: decompressing (with pigz) /kb/module/work/tmp/c6d48df4-7546-4d4b-8b88-b40c0290f4de to /kb/module/work/tmp/c6d48df4-7546-4d4b-8b88-b40c0290f4de ...
+1791905159.2924316: downloading done
+1791905159.7001333: Filename from Shock: reads.fastq.gz
+1791905159.7001958: Moving /kb/module/work/tmp/c6d48df4-7546-4d4b-8b88-b40c0290f4de to /kb/module/work/tmp/c6d48df4-7546-4d4b-8b88-b40c0290f4de.single.fastq
+1791905162.58 - CallbackServer: Subjob method: AssemblyUtil.save_assembly_from_fasta JobID: 1436e7d4-b551-439a-b534-a37faa31eef9
+1791905162.58 - CallbackServer: WARNING: Module AssemblyUtil was already used once for this job. Using cached version:
+url: https://github.com/kbaseapps/AssemblyUtil
+commit: 59855bcb24014c3030e146b98c8d3e70abac1fa1
+version: 3.0.0
+release: release
+
+save_assembly_from_fasta -- paramaters = 
+validating parameters
+Translating workspace name test_kb_tgsgapcloser_1791905038971 to a workspace ID. Prefer submitting a workspace ID over a mutable workspace name that may cause race conditions
+1791905163.94 - CallbackServer: Subjob method: DataFileUtil.ws_name_to_id JobID: f58018ff-1040-442f-84b6-01d39c4b6f6f
+1791905163.94 - CallbackServer: WARNING: Module DataFileUtil was already used once for this job. Using cached version:
+url: https://github.com/kbaseapps/DataFileUtil
+commit: 0d855560a37f8787ab3bb67e464b9c94b299764e
+version: 0.2.1
+release: release
+
+1791905165.025795: Shock url: https://appdev.kbase.us/services/shock-api
+1791905166.37 - CallbackServer: Subjob method: DataFileUtil.unpack_files JobID: 6de8e0ee-6b64-4577-957f-ede9151a2bc9
+1791905166.37 - CallbackServer: WARNING: Module DataFileUtil was already used once for this job. Using cached version:
+url: https://github.com/kbaseapps/DataFileUtil
+commit: 0d855560a37f8787ab3bb67e464b9c94b299764e
+version: 0.2.1
+release: release
+
+1791905167.4322863: Shock url: https://appdev.kbase.us/services/shock-api
+parsing FASTA file: /kb/module/work/tmp/import_fasta_6328c590-508b-4925-b96d-795dac831fb1/kt_ne.fa
+ - parsed 4 contigs, 199990 bp
+saving assemblies to KBase
+Uploading FASTA files to the Blobstore
+1791905168.01 - CallbackServer: Subjob method: DataFileUtil.file_to_shock_mass JobID: 7e4b1841-4c5e-4c7c-ae30-5599a89bce22
+1791905168.01 - CallbackServer: WARNING: Module DataFileUtil was already used once for this job. Using cached version:
+url: https://github.com/kbaseapps/DataFileUtil
+commit: 0d855560a37f8787ab3bb67e464b9c94b299764e
+version: 0.2.1
+release: release
+
+1791905169.0282993: Shock url: https://appdev.kbase.us/services/shock-api
+1791905169.2697847: uploading file /kb/module/work/tmp/import_fasta_6328c590-508b-4925-b96d-795dac831fb1/kt_ne.fa into shock node
+1791905169.745137: uploading done into shock node: fe4c9baa-b3fc-4f6b-928a-eb644287f368
+Saving Assemblies to Workspace
+1791905170.38 - CallbackServer: Subjob method: DataFileUtil.save_objects JobID: 5e38f30b-9796-493a-a557-7b18b7c023b4
+1791905170.39 - CallbackServer: WARNING: Module DataFileUtil was already used once for this job. Using cached version:
+url: https://github.com/kbaseapps/DataFileUtil
+commit: 0d855560a37f8787ab3bb67e464b9c94b299764e
+version: 0.2.1
+release: release
+
+1791905171.4607275: Shock url: https://appdev.kbase.us/services/shock-api
+1791905174.30 - CallbackServer: Subjob method: KBaseReport.create_extended_report JobID: 06f90734-76ff-4978-a2c8-40e448f01421
+1791905174.30 - CallbackServer: WARNING: Module KBaseReport was already used once for this job. Using cached version:
+url: https://github.com/kbaseapps/KBaseReport
+commit: b8bb470a4c88d65230e525db48d6a3730069185d
+version: 3.2.1
+release: release
+
+1791905175.63 - CallbackServer: Subjob method: DataFileUtil.file_to_shock JobID: 828b6ca1-9f8f-4d37-a8d7-59b7d348a00c
+1791905175.63 - CallbackServer: WARNING: Module DataFileUtil was already used once for this job. Using cached version:
+url: https://github.com/kbaseapps/DataFileUtil
+commit: 0d855560a37f8787ab3bb67e464b9c94b299764e
+version: 0.2.1
+release: release
+
+1791905176.672457: Shock url: https://appdev.kbase.us/services/shock-api
+1791905176.962216: uploading file /kb/module/work/tmp/kb_tgsgapcloser_6089e965ba3d/report/gapfill_summary.tsv into shock node
+1791905177.4350636: uploading done into shock node: 3db93821-18c4-44bc-b1d6-aa23db6291f9
+1791905178.01 - CallbackServer: Subjob method: DataFileUtil.file_to_shock JobID: 24284951-3dfd-40a0-8e3f-24c7ffd128fa
+1791905178.01 - CallbackServer: WARNING: Module DataFileUtil was already used once for this job. Using cached version:
+url: https://github.com/kbaseapps/DataFileUtil
+commit: 0d855560a37f8787ab3bb67e464b9c94b299764e
+version: 0.2.1
+release: release
+
+1791905179.0479286: Shock url: https://appdev.kbase.us/services/shock-api
+1791905179.3112452: uploading file /kb/module/work/tmp/kb_tgsgapcloser_6089e965ba3d/report/gapfill_per_gap.tsv into shock node
+1791905179.733367: uploading done into shock node: b43dc24c-cae4-4357-a754-000f1a0fb742
+1791905180.39 - CallbackServer: Subjob method: DataFileUtil.file_to_shock JobID: 19092835-2dd6-4c3c-a4da-b66a285d1865
+1791905180.39 - CallbackServer: WARNING: Module DataFileUtil was already used once for this job. Using cached version:
+url: https://github.com/kbaseapps/DataFileUtil
+commit: 0d855560a37f8787ab3bb67e464b9c94b299764e
+version: 0.2.1
+release: release
+
+1791905181.4158795: Shock url: https://appdev.kbase.us/services/shock-api
+1791905181.6992898: uploading file /kb/module/work/tmp/kb_tgsgapcloser_6089e965ba3d/report/tgsgapcloser_output.zip into shock node
+1791905182.1503975: uploading done into shock node: 11636025-baab-4679-9d7a-410057f7dca2
+1791905182.75 - CallbackServer: Subjob method: DataFileUtil.file_to_shock JobID: dd11d682-2931-4986-8772-712ecc7b56bb
+1791905182.75 - CallbackServer: WARNING: Module DataFileUtil was already used once for this job. Using cached version:
+url: https://github.com/kbaseapps/DataFileUtil
+commit: 0d855560a37f8787ab3bb67e464b9c94b299764e
+version: 0.2.1
+release: release
+
+1791905183.8073242: Shock url: https://appdev.kbase.us/services/shock-api
+1791905184.0574381: Packing /kb/module/work/tmp/kb_tgsgapcloser_6089e965ba3d/report/html to zip
+1791905184.0651224: uploading file /kb/module/work/tmp/kb_tgsgapcloser_6089e965ba3d/report/html/html.zip into shock node
+1791905184.478485: uploading done into shock node: 0c5bc723-e0ee-4bab-84f9-152295c2a55d
+1791905185.14 - CallbackServer: Subjob method: DataFileUtil.ws_name_to_id JobID: 18e06ca1-84f9-464c-85a4-143cba0d24ac
+1791905185.14 - CallbackServer: WARNING: Module DataFileUtil was already used once for this job. Using cached version:
+url: https://github.com/kbaseapps/DataFileUtil
+commit: 0d855560a37f8787ab3bb67e464b9c94b299764e
+version: 0.2.1
+release: release
+
+1791905186.1374996: Shock url: https://appdev.kbase.us/services/shock-api
+1791905187.49 - CallbackServer: Subjob method: DataFileUtil.save_objects JobID: 3a9936af-1e27-496a-a39d-feebeae9145d
+1791905187.49 - CallbackServer: WARNING: Module DataFileUtil was already used once for this job. Using cached version:
+url: https://github.com/kbaseapps/DataFileUtil
+commit: 0d855560a37f8787ab3bb67e464b9c94b299764e
+version: 0.2.1
+release: release
+
+1791905188.5123081: Shock url: https://appdev.kbase.us/services/shock-api
+....1791905191.751337 INFO: kb_tgsgapcloser summary: {"gaps_before": 12, "gaps_after": 0, "gaps_closed": 12, "filled": 12, "merged": 0, "partial": 0, "unfilled": 0, "closure_rate": 1.0, "gap_bp_before": 11100, "gap_bp_after": 0, "filled_bp": 11090, "scaftig_n50_before": 12713, "scaftig_n50_after": 59993, "read_coverage": 29.1, "tool_version": "1.2.1", "runtime_s": 0.8}
+1791905191.75 - CallbackServer: Subjob method: AssemblyUtil.get_assembly_as_fasta JobID: 4d8a3bbd-78b9-4024-a321-fa52a6198f12
+1791905191.75 - CallbackServer: WARNING: Module AssemblyUtil was already used once for this job. Using cached version:
+url: https://github.com/kbaseapps/AssemblyUtil
+commit: 59855bcb24014c3030e146b98c8d3e70abac1fa1
+version: 3.0.0
+release: release
+
+downloading ws object data (77656/6/1)
+1791905193.09 - CallbackServer: Subjob method: DataFileUtil.get_objects JobID: 785ad28b-44eb-424c-bae3-1a5bbea30362
+1791905193.09 - CallbackServer: WARNING: Module DataFileUtil was already used once for this job. Using cached version:
+url: https://github.com/kbaseapps/DataFileUtil
+commit: 0d855560a37f8787ab3bb67e464b9c94b299764e
+version: 0.2.1
+release: release
+
+1791905194.1072726: Shock url: https://appdev.kbase.us/services/shock-api
+1791905195.47 - CallbackServer: Subjob method: DataFileUtil.shock_to_file JobID: 7e2c0af8-ea83-4b03-b0ee-147153ca4771
+1791905195.47 - CallbackServer: WARNING: Module DataFileUtil was already used once for this job. Using cached version:
+url: https://github.com/kbaseapps/DataFileUtil
+commit: 0d855560a37f8787ab3bb67e464b9c94b299764e
+version: 0.2.1
+release: release
+
+1791905196.612282: Shock url: https://appdev.kbase.us/services/shock-api
+1791905196.9225352: Fetching info for handle: KBH_252847
+1791905197.165133: downloading shock node fe4c9baa-b3fc-4f6b-928a-eb644287f368 into file: /kb/module/work/tmp/kt_ne.fa
+1791905197.588798: downloading done
+1791905199.92 - CallbackServer: Subjob method: AssemblyUtil.get_assembly_as_fasta JobID: 0f26ed72-c218-4520-ba16-fc5b1faeaa11
+1791905199.92 - CallbackServer: WARNING: Module AssemblyUtil was already used once for this job. Using cached version:
+url: https://github.com/kbaseapps/AssemblyUtil
+commit: 59855bcb24014c3030e146b98c8d3e70abac1fa1
+version: 3.0.0
+release: release
+
+downloading ws object data (77656/1/1)
+1791905201.23 - CallbackServer: Subjob method: DataFileUtil.get_objects JobID: 9faf1eff-3e5b-425c-99e5-99de364d8041
+1791905201.23 - CallbackServer: WARNING: Module DataFileUtil was already used once for this job. Using cached version:
+url: https://github.com/kbaseapps/DataFileUtil
+commit: 0d855560a37f8787ab3bb67e464b9c94b299764e
+version: 0.2.1
+release: release
+
+1791905202.2488587: Shock url: https://appdev.kbase.us/services/shock-api
+1791905203.60 - CallbackServer: Subjob method: DataFileUtil.shock_to_file JobID: 500c0449-5a43-477d-9260-bf2f1bf616b3
+1791905203.60 - CallbackServer: WARNING: Module DataFileUtil was already used once for this job. Using cached version:
+url: https://github.com/kbaseapps/DataFileUtil
+commit: 0d855560a37f8787ab3bb67e464b9c94b299764e
+version: 0.2.1
+release: release
+
+1791905204.6640422: Shock url: https://appdev.kbase.us/services/shock-api
+1791905204.9603384: Fetching info for handle: KBH_252839
+1791905205.2099364: downloading shock node 7f3bb01f-61a1-4d5d-8b74-df73ceeed377 into file: /kb/module/work/tmp/kt_draft.fa
+1791905205.6252398: downloading done
+1791905207.88 - CallbackServer: Subjob method: AssemblyUtil.get_assembly_as_fasta JobID: 4ae141c9-5bba-4777-95a7-f2c5152a45a4
+1791905207.88 - CallbackServer: WARNING: Module AssemblyUtil was already used once for this job. Using cached version:
+url: https://github.com/kbaseapps/AssemblyUtil
+commit: 59855bcb24014c3030e146b98c8d3e70abac1fa1
+version: 3.0.0
+release: release
+
+downloading ws object data (77656/2/1)
+1791905209.22 - CallbackServer: Subjob method: DataFileUtil.get_objects JobID: 54c1a1f0-aa68-48e9-b93f-c016c72c2053
+1791905209.23 - CallbackServer: WARNING: Module DataFileUtil was already used once for this job. Using cached version:
+url: https://github.com/kbaseapps/DataFileUtil
+commit: 0d855560a37f8787ab3bb67e464b9c94b299764e
+version: 0.2.1
+release: release
+
+1791905210.238204: Shock url: https://appdev.kbase.us/services/shock-api
+1791905211.58 - CallbackServer: Subjob method: DataFileUtil.shock_to_file JobID: e25fb698-0a39-4ca3-bd44-f25644bd3e76
+1791905211.58 - CallbackServer: WARNING: Module DataFileUtil was already used once for this job. Using cached version:
+url: https://github.com/kbaseapps/DataFileUtil
+commit: 0d855560a37f8787ab3bb67e464b9c94b299764e
+version: 0.2.1
+release: release
+
+1791905212.6211295: Shock url: https://appdev.kbase.us/services/shock-api
+1791905212.8747666: Fetching info for handle: KBH_252840
+1791905213.1519: downloading shock node 8ddb0c18-63fe-4465-a3c8-e49ef304556a into file: /kb/module/work/tmp/kt_truth.fa
+1791905213.56933: downloading done
+1791905215.95 - CallbackServer: Subjob method: AssemblyUtil.save_assembly_from_fasta JobID: 124efc98-bcad-4094-af1b-593482193553
+1791905215.95 - CallbackServer: WARNING: Module AssemblyUtil was already used once for this job. Using cached version:
+url: https://github.com/kbaseapps/AssemblyUtil
+commit: 59855bcb24014c3030e146b98c8d3e70abac1fa1
+version: 3.0.0
+release: release
+
+save_assembly_from_fasta -- paramaters = 
+validating parameters
+Translating workspace name test_kb_tgsgapcloser_1791905038971 to a workspace ID. Prefer submitting a workspace ID over a mutable workspace name that may cause race conditions
+1791905217.35 - CallbackServer: Subjob method: DataFileUtil.ws_name_to_id JobID: c432cdb8-a1ae-42e8-937a-05519e4deb42
+1791905217.35 - CallbackServer: WARNING: Module DataFileUtil was already used once for this job. Using cached version:
+url: https://github.com/kbaseapps/DataFileUtil
+commit: 0d855560a37f8787ab3bb67e464b9c94b299764e
+version: 0.2.1
+release: release
+
+1791905218.3730214: Shock url: https://appdev.kbase.us/services/shock-api
+1791905219.73 - CallbackServer: Subjob method: DataFileUtil.unpack_files JobID: fbd2c5e2-8165-40af-8219-85e7f7e85a3d
+1791905219.73 - CallbackServer: WARNING: Module DataFileUtil was already used once for this job. Using cached version:
+url: https://github.com/kbaseapps/DataFileUtil
+commit: 0d855560a37f8787ab3bb67e464b9c94b299764e
+version: 0.2.1
+release: release
+
+1791905220.727909: Shock url: https://appdev.kbase.us/services/shock-api
+parsing FASTA file: /kb/module/work/tmp/import_fasta_247fbd19-7591-49ee-a220-11454eda8d98/kt_contigs.fa
+ - parsed 4 contigs, 200000 bp
+saving assemblies to KBase
+Uploading FASTA files to the Blobstore
+1791905221.37 - CallbackServer: Subjob method: DataFileUtil.file_to_shock_mass JobID: 2743a881-5509-45dd-962d-cffce8826195
+1791905221.37 - CallbackServer: WARNING: Module DataFileUtil was already used once for this job. Using cached version:
+url: https://github.com/kbaseapps/DataFileUtil
+commit: 0d855560a37f8787ab3bb67e464b9c94b299764e
+version: 0.2.1
+release: release
+
+1791905222.3993614: Shock url: https://appdev.kbase.us/services/shock-api
+1791905222.662107: uploading file /kb/module/work/tmp/import_fasta_247fbd19-7591-49ee-a220-11454eda8d98/kt_contigs.fa into shock node
+1791905223.0857866: uploading done into shock node: fe2bc919-e873-4d15-afac-33b741290c30
+Saving Assemblies to Workspace
+1791905223.78 - CallbackServer: Subjob method: DataFileUtil.save_objects JobID: ff6ff468-12d1-4957-a1e6-de3cc08fdfaf
+1791905223.78 - CallbackServer: WARNING: Module DataFileUtil was already used once for this job. Using cached version:
+url: https://github.com/kbaseapps/DataFileUtil
+commit: 0d855560a37f8787ab3bb67e464b9c94b299764e
+version: 0.2.1
+release: release
+
+1791905224.7878995: Shock url: https://appdev.kbase.us/services/shock-api
+1791905227.70 - CallbackServer: Subjob method: KBaseReport.create_extended_report JobID: f4bd989c-acbd-4c78-90e2-f19f8d4f333d
+1791905227.70 - CallbackServer: WARNING: Module KBaseReport was already used once for this job. Using cached version:
+url: https://github.com/kbaseapps/KBaseReport
+commit: b8bb470a4c88d65230e525db48d6a3730069185d
+version: 3.2.1
+release: release
+
+1791905229.04 - CallbackServer: Subjob method: DataFileUtil.file_to_shock JobID: bb87ab57-0364-4690-9fee-b35bc66699d1
+1791905229.04 - CallbackServer: WARNING: Module DataFileUtil was already used once for this job. Using cached version:
+url: https://github.com/kbaseapps/DataFileUtil
+commit: 0d855560a37f8787ab3bb67e464b9c94b299764e
+version: 0.2.1
+release: release
+
+1791905230.0443735: Shock url: https://appdev.kbase.us/services/shock-api
+1791905230.2918842: uploading file /kb/module/work/tmp/kb_tgsgapcloser_e1226d912d05/report/gapfill_summary.tsv into shock node
+1791905231.074008: uploading done into shock node: bd11197e-4e13-461b-a6cd-921417882ab2
+1791905231.40 - CallbackServer: Subjob method: DataFileUtil.file_to_shock JobID: ce03ea56-638c-4645-a07a-6e4b5d6cea97
+1791905231.40 - CallbackServer: WARNING: Module DataFileUtil was already used once for this job. Using cached version:
+url: https://github.com/kbaseapps/DataFileUtil
+commit: 0d855560a37f8787ab3bb67e464b9c94b299764e
+version: 0.2.1
+release: release
+
+1791905232.415414: Shock url: https://appdev.kbase.us/services/shock-api
+1791905232.6555068: uploading file /kb/module/work/tmp/kb_tgsgapcloser_e1226d912d05/report/gapfill_per_gap.tsv into shock node
+1791905233.0114348: uploading done into shock node: 3d82e6fb-44b3-477f-9eb0-3d3204309ff9
+1791905233.79 - CallbackServer: Subjob method: DataFileUtil.file_to_shock JobID: f820d6a6-61cf-4338-97d1-d42f9c01b0f4
+1791905233.79 - CallbackServer: WARNING: Module DataFileUtil was already used once for this job. Using cached version:
+url: https://github.com/kbaseapps/DataFileUtil
+commit: 0d855560a37f8787ab3bb67e464b9c94b299764e
+version: 0.2.1
+release: release
+
+1791905234.8373837: Shock url: https://appdev.kbase.us/services/shock-api
+1791905235.1126044: uploading file /kb/module/work/tmp/kb_tgsgapcloser_e1226d912d05/report/tgsgapcloser_output.zip into shock node
+1791905235.533789: uploading done into shock node: 49812171-78f5-4490-8d23-61c66f6cb931
+1791905236.17 - CallbackServer: Subjob method: DataFileUtil.file_to_shock JobID: ab72430e-ac93-4d26-a4df-24ca5e2874e3
+1791905236.17 - CallbackServer: WARNING: Module DataFileUtil was already used once for this job. Using cached version:
+url: https://github.com/kbaseapps/DataFileUtil
+commit: 0d855560a37f8787ab3bb67e464b9c94b299764e
+version: 0.2.1
+release: release
+
+1791905237.1706867: Shock url: https://appdev.kbase.us/services/shock-api
+1791905237.4436214: Packing /kb/module/work/tmp/kb_tgsgapcloser_e1226d912d05/report/html to zip
+1791905237.4524555: uploading file /kb/module/work/tmp/kb_tgsgapcloser_e1226d912d05/report/html/html.zip into shock node
+1791905237.9652174: uploading done into shock node: 3ba60b7d-841e-4b5b-a502-83cd9ae7e3db
+1791905238.53 - CallbackServer: Subjob method: DataFileUtil.ws_name_to_id JobID: bd04b477-45b7-4e0d-9b54-53bbc0afd9cf
+1791905238.53 - CallbackServer: WARNING: Module DataFileUtil was already used once for this job. Using cached version:
+url: https://github.com/kbaseapps/DataFileUtil
+commit: 0d855560a37f8787ab3bb67e464b9c94b299764e
+version: 0.2.1
+release: release
+
+1791905239.5575047: Shock url: https://appdev.kbase.us/services/shock-api
+1791905240.91 - CallbackServer: Subjob method: DataFileUtil.save_objects JobID: e2b7ea9a-61bc-499d-bb13-b2ec30c6306a
+1791905240.91 - CallbackServer: WARNING: Module DataFileUtil was already used once for this job. Using cached version:
+url: https://github.com/kbaseapps/DataFileUtil
+commit: 0d855560a37f8787ab3bb67e464b9c94b299764e
+version: 0.2.1
+release: release
+
+1791905241.9311805: Shock url: https://appdev.kbase.us/services/shock-api
+.1791905245.1523094 INFO: kb_tgsgapcloser summary: {"gaps_before": 12, "gaps_after": 0, "gaps_closed": 12, "filled": 12, "merged": 0, "partial": 0, "unfilled": 0, "closure_rate": 1.0, "gap_bp_before": 11100, "gap_bp_after": 0, "filled_bp": 11100, "scaftig_n50_before": 12713, "scaftig_n50_after": 60000, "read_coverage": 1.1, "tool_version": "1.2.1", "runtime_s": 0.2}
+1791905245.16 - CallbackServer: Subjob method: AssemblyUtil.get_assembly_as_fasta JobID: 2d9702f1-6c26-4009-af5c-8e7721ed1263
+1791905245.16 - CallbackServer: WARNING: Module AssemblyUtil was already used once for this job. Using cached version:
+url: https://github.com/kbaseapps/AssemblyUtil
+commit: 59855bcb24014c3030e146b98c8d3e70abac1fa1
+version: 3.0.0
+release: release
+
+downloading ws object data (77656/8/1)
+1791905246.45 - CallbackServer: Subjob method: DataFileUtil.get_objects JobID: 2aa536f1-9209-449a-b14e-2a38df0b10d9
+1791905246.45 - CallbackServer: WARNING: Module DataFileUtil was already used once for this job. Using cached version:
+url: https://github.com/kbaseapps/DataFileUtil
+commit: 0d855560a37f8787ab3bb67e464b9c94b299764e
+version: 0.2.1
+release: release
+
+1791905247.5168984: Shock url: https://appdev.kbase.us/services/shock-api
+1791905248.83 - CallbackServer: Subjob method: DataFileUtil.shock_to_file JobID: 07bf36be-f33f-4f70-966e-90b5342a31e8
+1791905248.83 - CallbackServer: WARNING: Module DataFileUtil was already used once for this job. Using cached version:
+url: https://github.com/kbaseapps/DataFileUtil
+commit: 0d855560a37f8787ab3bb67e464b9c94b299764e
+version: 0.2.1
+release: release
+
+1791905249.8637092: Shock url: https://appdev.kbase.us/services/shock-api
+1791905250.1375868: Fetching info for handle: KBH_252852
+1791905250.4196517: downloading shock node fe2bc919-e873-4d15-afac-33b741290c30 into file: /kb/module/work/tmp/kt_contigs.fa
+1791905250.7707388: downloading done
+1791905253.18 - CallbackServer: Subjob method: AssemblyUtil.get_assembly_as_fasta JobID: e244228e-00ee-4ab0-90b3-2375deb0d29e
+1791905253.18 - CallbackServer: WARNING: Module AssemblyUtil was already used once for this job. Using cached version:
+url: https://github.com/kbaseapps/AssemblyUtil
+commit: 59855bcb24014c3030e146b98c8d3e70abac1fa1
+version: 3.0.0
+release: release
+
+downloading ws object data (77656/2/1)
+1791905254.52 - CallbackServer: Subjob method: DataFileUtil.get_objects JobID: 4309186c-3d08-4ede-899c-1d4630302f61
+1791905254.52 - CallbackServer: WARNING: Module DataFileUtil was already used once for this job. Using cached version:
+url: https://github.com/kbaseapps/DataFileUtil
+commit: 0d855560a37f8787ab3bb67e464b9c94b299764e
+version: 0.2.1
+release: release
+
+1791905255.48952: Shock url: https://appdev.kbase.us/services/shock-api
+1791905256.89 - CallbackServer: Subjob method: DataFileUtil.shock_to_file JobID: 4f6eca51-d028-4d87-8a4f-47eb4597d8e2
+1791905256.89 - CallbackServer: WARNING: Module DataFileUtil was already used once for this job. Using cached version:
+url: https://github.com/kbaseapps/DataFileUtil
+commit: 0d855560a37f8787ab3bb67e464b9c94b299764e
+version: 0.2.1
+release: release
+
+1791905259.0754776: Shock url: https://appdev.kbase.us/services/shock-api
+1791905259.335066: Fetching info for handle: KBH_252840
+1791905259.5518773: downloading shock node 8ddb0c18-63fe-4465-a3c8-e49ef304556a into file: /kb/module/work/tmp/kt_truth.fa
+1791905259.9882202: downloading done
+1791905261.29 - CallbackServer: Subjob method: AssemblyUtil.get_assembly_as_fasta JobID: e9b88f3f-3168-4f8e-b727-e2a3d372bcb9
+1791905261.29 - CallbackServer: WARNING: Module AssemblyUtil was already used once for this job. Using cached version:
+url: https://github.com/kbaseapps/AssemblyUtil
+commit: 59855bcb24014c3030e146b98c8d3e70abac1fa1
+version: 3.0.0
+release: release
+
+downloading ws object data (77656/1/1)
+1791905262.60 - CallbackServer: Subjob method: DataFileUtil.get_objects JobID: ebae1f2e-3cec-4768-84e5-0ee37c47c8cb
+1791905262.60 - CallbackServer: WARNING: Module DataFileUtil was already used once for this job. Using cached version:
+url: https://github.com/kbaseapps/DataFileUtil
+commit: 0d855560a37f8787ab3bb67e464b9c94b299764e
+version: 0.2.1
+release: release
+
+1791905263.6802802: Shock url: https://appdev.kbase.us/services/shock-api
+1791905264.99 - CallbackServer: Subjob method: DataFileUtil.shock_to_file JobID: f73f7684-20c6-420c-b58e-59166f70092f
+1791905264.99 - CallbackServer: WARNING: Module DataFileUtil was already used once for this job. Using cached version:
+url: https://github.com/kbaseapps/DataFileUtil
+commit: 0d855560a37f8787ab3bb67e464b9c94b299764e
+version: 0.2.1
+release: release
+
+1791905266.0277963: Shock url: https://appdev.kbase.us/services/shock-api
+1791905266.3066366: Fetching info for handle: KBH_252839
+1791905266.5637956: downloading shock node 7f3bb01f-61a1-4d5d-8b74-df73ceeed377 into file: /kb/module/work/tmp/kt_draft.fa
+1791905267.037589: downloading done
+...
+Name                                       Stmts   Miss  Cover
+--------------------------------------------------------------
+kb_tgsgapcloser/__init__.py                    0      0   100%
+kb_tgsgapcloser/authclient.py                 59     39    34%
+kb_tgsgapcloser/kb_tgsgapcloserImpl.py        21      3    86%
+kb_tgsgapcloser/kb_tgsgapcloserServer.py     372    275    26%
+kb_tgsgapcloser/tgsgapcloser_utils.py        439     43    90%
+--------------------------------------------------------------
+TOTAL                                        891    360    60%
+----------------------------------------------------------------------
+Ran 18 tests in 230.718s
+
+OK
+closed 12 / 12 bridgeable planted gaps
+racon: 13 edits over 11100 planted bp, aligned 1.000
+edits vs truth: racon 13, no correction 780
+contigs source: 0 edits, aligned 1.000
+Test workspace was deleted
+Shutting down callback server...
+1791905269.92 - CallbackServer: Shutting down executor service

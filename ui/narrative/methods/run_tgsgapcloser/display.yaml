@@ -1,0 +1,148 @@
+#
+# define display information
+#
+name: Fill Assembly Gaps with Long Reads - TGS-GapCloser v1.2.1
+
+tooltip: |
+    Close N-gaps inside a scaffolded assembly using Nanopore or PacBio long reads, or pre-assembled contigs.
+
+screenshots: []
+
+icon: null
+
+#
+# define a set of similar apps that might be useful to the user
+#
+suggestions:
+    apps:
+        related:
+            []
+        next:
+            []
+    methods:
+        related:
+            []
+        next:
+            []
+
+#
+# Configure the display and description of parameters
+#
+parameters :
+    assembly_ref :
+        ui-name : |
+            Scaffolded Assembly
+        short-hint : |
+            Assembly whose scaffolds contain N-gaps to fill.
+        long-hint : |
+            An Assembly with runs of N inside its sequences, typically from a scaffolder such as RagTag. Every N-run inside a sequence is treated as a gap; N-runs at sequence ends are left alone.
+
+    reads_ref :
+        ui-name : |
+            Long Reads or Contigs
+        short-hint : |
+            Single-end Nanopore or PacBio reads, or an Assembly of contigs, used to fill the gaps.
+        long-hint : |
+            Long reads that span the gaps (about 10x coverage or more is recommended), converted to FASTA automatically. An Assembly of contigs from another assembler can also be used as the fill source; set error correction to None in that case.
+
+    read_type :
+        ui-name : |
+            Read Type
+        short-hint : |
+            Sequencing technology of the reads; sets the tool's alignment presets and filters.
+        long-hint : |
+            Nanopore uses minimap2 -x ava-ont with min identity 0.3 and min match 300 bp. PacBio CLR uses -x ava-pb with 0.2 and 200 bp. PacBio HiFi uses the PacBio settings with minimap2 -x asm20, as the tool's documentation suggests.
+
+    error_correction :
+        ui-name : |
+            Error Correction
+        short-hint : |
+            Correct the candidate fill sequences with Racon before filling.
+        long-hint : |
+            Racon corrects only the read fragments chosen to fill gaps, using the same long reads. Choose None for accurate input (HiFi reads or contigs); with None, the candidate-selection settings below have no effect.
+
+    output_assembly_name :
+        ui-name : |
+            Output Assembly Name
+        short-hint : |
+            Name for the gap-filled Assembly.
+
+    racon_rounds :
+        ui-name : |
+            Racon Rounds
+        short-hint : |
+            Number of Racon correction rounds on candidate fills (1-4). Default 1.
+
+    minimap2_preset :
+        ui-name : |
+            minimap2 Preset
+        short-hint : |
+            Alignment preset; Automatic uses the tool default for the read type (asm20 for HiFi reads and contigs).
+
+    min_idy :
+        ui-name : |
+            Minimum Identity
+        short-hint : |
+            Minimum alignment identity for candidate fills. Blank uses 0.3 (Nanopore) or 0.2 (PacBio).
+
+    min_match :
+        ui-name : |
+            Minimum Matched Length
+        short-hint : |
+            Minimum matched length (bp) for candidate fills. Blank uses 300 (Nanopore) or 200 (PacBio).
+
+    min_nread :
+        ui-name : |
+            Minimum Bridging Reads
+        short-hint : |
+            Minimum number of reads that must bridge a gap before it is filled. Default 1. Racon mode only.
+
+    max_candidate :
+        ui-name : |
+            Maximum Candidates per Gap
+        short-hint : |
+            Maximum candidate fill sequences considered per gap. Default 10. Racon mode only.
+
+    chunk :
+        ui-name : |
+            Correction Chunks
+        short-hint : |
+            Split candidates into this many chunks for correction, to limit memory. Default 3. Racon mode only.
+
+    gapsize_check :
+        ui-name : |
+            Check Gap Size
+        short-hint : |
+            Reject fills whose length disagrees with the estimated gap size.
+
+    threads :
+        ui-name : |
+            Threads
+        short-hint : |
+            Number of threads. Blank uses all CPUs available to the job.
+
+description : |
+    <p>TGS-GapCloser fills the N-gaps inside scaffolds using long reads. It aligns the reads to the contigs on either side of each gap, picks a small number of candidate read fragments that bridge the gap, optionally corrects just those fragments with Racon, and inserts the best one. Contig order and orientation are kept; the estimated gap sizes are not.</p>
+    <p>The app produces a new Assembly and a report with before-and-after metrics (gaps, gap bases, scaffold and scaftig N50), the status of every gap (filled, merged, partial or unfilled), warnings, and the exact command run. The per-gap table and tool logs are downloadable.</p>
+    <p><b>Input tips:</b> use reads from the same strain as the assembly at about 10x coverage or more. Paired-end short reads cannot be used. The tool's Pilon mode (short-read correction) is not offered in this version.</p>
+
+publications :
+    -
+        pmid: 32893860
+        display-text: |
+            Xu M, Guo L, Gu S, Wang O, Zhang R, Peters BA, Fan G, Liu X, Xu X, Deng L, Zhang Y. (2020) TGS-GapCloser: A fast and accurate gap closer for large genomes with low coverage of error-prone long reads. GigaScience 9(9): giaa094.
+        link: https://doi.org/10.1093/gigascience/giaa094
+    -
+        pmid: 29750242
+        display-text: |
+            Li H. (2018) Minimap2: pairwise alignment for nucleotide sequences. Bioinformatics 34(18): 3094-3100.
+        link: https://doi.org/10.1093/bioinformatics/bty191
+    -
+        pmid: 28100585
+        display-text: |
+            Vaser R, Sovic I, Nagarajan N, Sikic M. (2017) Fast and accurate de novo genome assembly from long uncorrected reads. Genome Research 27(5): 737-746.
+        link: https://doi.org/10.1101/gr.214270.116
+    -
+        display-text: |
+            TGS-GapCloser source code (GPL-3.0)
+        link: https://github.com/BGI-Qingdao/TGS-GapCloser

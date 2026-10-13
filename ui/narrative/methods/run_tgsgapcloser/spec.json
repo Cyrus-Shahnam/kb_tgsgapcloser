@@ -1,0 +1,372 @@
+{
+  "ver": "0.1.0",
+  "authors": [
+    "ac.shahnam, cshahnam"
+  ],
+  "contact": "",
+  "categories": [
+    "active",
+    "assembly"
+  ],
+  "widgets": {
+    "input": null,
+    "output": "no-display"
+  },
+  "parameters": [
+    {
+      "id": "assembly_ref",
+      "optional": false,
+      "advanced": false,
+      "allow_multiple": false,
+      "default_values": [
+        ""
+      ],
+      "field_type": "text",
+      "text_options": {
+        "valid_ws_types": [
+          "KBaseGenomeAnnotations.Assembly"
+        ]
+      }
+    },
+    {
+      "id": "reads_ref",
+      "optional": false,
+      "advanced": false,
+      "allow_multiple": false,
+      "default_values": [
+        ""
+      ],
+      "field_type": "text",
+      "text_options": {
+        "valid_ws_types": [
+          "KBaseFile.SingleEndLibrary",
+          "KBaseAssembly.SingleEndLibrary",
+          "KBaseGenomeAnnotations.Assembly"
+        ]
+      }
+    },
+    {
+      "id": "read_type",
+      "optional": false,
+      "advanced": false,
+      "allow_multiple": false,
+      "default_values": [
+        "ont"
+      ],
+      "field_type": "dropdown",
+      "dropdown_options": {
+        "options": [
+          {
+            "value": "ont",
+            "display": "Oxford Nanopore",
+            "id": "ont",
+            "ui_name": "Oxford Nanopore"
+          },
+          {
+            "value": "pb_clr",
+            "display": "PacBio CLR",
+            "id": "pb_clr",
+            "ui_name": "PacBio CLR"
+          },
+          {
+            "value": "pb_hifi",
+            "display": "PacBio HiFi",
+            "id": "pb_hifi",
+            "ui_name": "PacBio HiFi"
+          }
+        ]
+      }
+    },
+    {
+      "id": "error_correction",
+      "optional": false,
+      "advanced": false,
+      "allow_multiple": false,
+      "default_values": [
+        "racon"
+      ],
+      "field_type": "dropdown",
+      "dropdown_options": {
+        "options": [
+          {
+            "value": "racon",
+            "display": "Racon (long reads only)",
+            "id": "racon",
+            "ui_name": "Racon (long reads only)"
+          },
+          {
+            "value": "none",
+            "display": "None (reads already accurate, or contigs)",
+            "id": "none",
+            "ui_name": "None (reads already accurate, or contigs)"
+          }
+        ]
+      }
+    },
+    {
+      "id": "output_assembly_name",
+      "optional": false,
+      "advanced": false,
+      "allow_multiple": false,
+      "default_values": [
+        ""
+      ],
+      "field_type": "text",
+      "text_options": {
+        "valid_ws_types": [
+          "KBaseGenomeAnnotations.Assembly"
+        ],
+        "is_output_name": true
+      }
+    },
+    {
+      "id": "racon_rounds",
+      "optional": true,
+      "advanced": true,
+      "allow_multiple": false,
+      "default_values": [
+        "1"
+      ],
+      "field_type": "text",
+      "text_options": {
+        "validate_as": "int",
+        "min_int": 1,
+        "max_int": 4
+      }
+    },
+    {
+      "id": "minimap2_preset",
+      "optional": true,
+      "advanced": true,
+      "allow_multiple": false,
+      "default_values": [
+        "auto"
+      ],
+      "field_type": "dropdown",
+      "dropdown_options": {
+        "options": [
+          {
+            "value": "auto",
+            "display": "Automatic",
+            "id": "auto",
+            "ui_name": "Automatic"
+          },
+          {
+            "value": "asm5",
+            "display": "asm5",
+            "id": "asm5",
+            "ui_name": "asm5"
+          },
+          {
+            "value": "asm10",
+            "display": "asm10",
+            "id": "asm10",
+            "ui_name": "asm10"
+          },
+          {
+            "value": "asm20",
+            "display": "asm20",
+            "id": "asm20",
+            "ui_name": "asm20"
+          }
+        ]
+      }
+    },
+    {
+      "id": "min_idy",
+      "optional": true,
+      "advanced": true,
+      "allow_multiple": false,
+      "default_values": [
+        ""
+      ],
+      "field_type": "text",
+      "text_options": {
+        "validate_as": "float",
+        "min_float": 0.01,
+        "max_float": 1.0
+      }
+    },
+    {
+      "id": "min_match",
+      "optional": true,
+      "advanced": true,
+      "allow_multiple": false,
+      "default_values": [
+        ""
+      ],
+      "field_type": "text",
+      "text_options": {
+        "validate_as": "int",
+        "min_int": 1,
+        "max_int": 100000
+      }
+    },
+    {
+      "id": "min_nread",
+      "optional": true,
+      "advanced": true,
+      "allow_multiple": false,
+      "default_values": [
+        "1"
+      ],
+      "field_type": "text",
+      "text_options": {
+        "validate_as": "int",
+        "min_int": 1,
+        "max_int": 1000
+      }
+    },
+    {
+      "id": "max_candidate",
+      "optional": true,
+      "advanced": true,
+      "allow_multiple": false,
+      "default_values": [
+        "10"
+      ],
+      "field_type": "text",
+      "text_options": {
+        "validate_as": "int",
+        "min_int": 1,
+        "max_int": 100
+      }
+    },
+    {
+      "id": "chunk",
+      "optional": true,
+      "advanced": true,
+      "allow_multiple": false,
+      "default_values": [
+        "3"
+      ],
+      "field_type": "text",
+      "text_options": {
+        "validate_as": "int",
+        "min_int": 1,
+        "max_int": 32
+      }
+    },
+    {
+      "id": "gapsize_check",
+      "optional": true,
+      "advanced": true,
+      "allow_multiple": false,
+      "default_values": [
+        "0"
+      ],
+      "field_type": "checkbox",
+      "checkbox_options": {
+        "checked_value": 1,
+        "unchecked_value": 0
+      }
+    },
+    {
+      "id": "threads",
+      "optional": true,
+      "advanced": true,
+      "allow_multiple": false,
+      "default_values": [
+        ""
+      ],
+      "field_type": "text",
+      "text_options": {
+        "validate_as": "int",
+        "min_int": 1,
+        "max_int": 128
+      }
+    }
+  ],
+  "behavior": {
+    "service-mapping": {
+      "url": "",
+      "name": "kb_tgsgapcloser",
+      "method": "run_tgsgapcloser",
+      "input_mapping": [
+        {
+          "narrative_system_variable": "workspace",
+          "target_property": "workspace_name"
+        },
+        {
+          "input_parameter": "assembly_ref",
+          "target_property": "assembly_ref",
+          "target_type_transform": "resolved-ref"
+        },
+        {
+          "input_parameter": "reads_ref",
+          "target_property": "reads_ref",
+          "target_type_transform": "resolved-ref"
+        },
+        {
+          "input_parameter": "read_type",
+          "target_property": "read_type"
+        },
+        {
+          "input_parameter": "error_correction",
+          "target_property": "error_correction"
+        },
+        {
+          "input_parameter": "output_assembly_name",
+          "target_property": "output_assembly_name"
+        },
+        {
+          "input_parameter": "racon_rounds",
+          "target_property": "racon_rounds"
+        },
+        {
+          "input_parameter": "minimap2_preset",
+          "target_property": "minimap2_preset"
+        },
+        {
+          "input_parameter": "min_idy",
+          "target_property": "min_idy"
+        },
+        {
+          "input_parameter": "min_match",
+          "target_property": "min_match"
+        },
+        {
+          "input_parameter": "min_nread",
+          "target_property": "min_nread"
+        },
+        {
+          "input_parameter": "max_candidate",
+          "target_property": "max_candidate"
+        },
+        {
+          "input_parameter": "chunk",
+          "target_property": "chunk"
+        },
+        {
+          "input_parameter": "gapsize_check",
+          "target_property": "gapsize_check"
+        },
+        {
+          "input_parameter": "threads",
+          "target_property": "threads"
+        }
+      ],
+      "output_mapping": [
+        {
+          "service_method_output_path": [
+            0,
+            "report_name"
+          ],
+          "target_property": "report_name"
+        },
+        {
+          "service_method_output_path": [
+            0,
+            "report_ref"
+          ],
+          "target_property": "report_ref"
+        },
+        {
+          "narrative_system_variable": "workspace",
+          "target_property": "workspace_name"
+        }
+      ]
+    }
+  },
+  "job_id_output_field": "docker"
+}
