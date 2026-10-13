@@ -14,4 +14,4 @@ owners:
     [ac.shahnam, cshahnam]
 
 service-config:
-    dynamic-services: false
+    dynamic-service: false
